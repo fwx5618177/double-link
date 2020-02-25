@@ -57,9 +57,10 @@ LinkList::~LinkList() {
 void LinkList::Insert(string address, string houseowner, float price, int postcode) {
 	NodeST* node = new NodeST();
 	node->data = new DataST();
-	NodeST* nodeTmp1 = new NodeST();
-	NodeST* nodeTmp2 = new NodeST();
-	NodeST* nodeTmp3 = new NodeST();
+	NodeST* nodeTmp = new NodeST();
+	// NodeST* nodeTmp1 = new NodeST();
+	// NodeST* nodeTmp2 = new NodeST();
+	// NodeST* nodeTmp3 = new NodeST();
 
 	node->data->address = address;
 	node->data->houseowner = houseowner;
@@ -80,29 +81,60 @@ void LinkList::Insert(string address, string houseowner, float price, int postco
 	}
 
 
-	//链表不为空，插入到尾巴;
-	tail->nex = node;
-	node->pre = tail;
-	tail = node;
+	//比较插入;
 
-
-	//根据ASCII码对地址进行排序;
-	//冒泡排序;
-	for (nodeTmp1 = head->nex; nodeTmp1->nex != NULL; nodeTmp1 = nodeTmp1->nex) {
-
-		for (nodeTmp2 = nodeTmp1->nex; nodeTmp2 != NULL; nodeTmp2 = nodeTmp2->nex) {
-
-			if (nodeTmp2->data->address < nodeTmp1->data->address) {
-				nodeTmp3 = nodeTmp1;
-				nodeTmp1 = nodeTmp2;
-				nodeTmp2 = nodeTmp3;
-			}
+	for (nodeTmp = head; nodeTmp != NULL; nodeTmp = nodeTmp->nex) {
+		if (node->data->address < head->data->address) {
+			head->pre = node;
+			node->nex = head;
+			head = node;
+			return;
 		}
+		else if (node->data->address >= tail->data->address) {
+			tail->nex = node;
+			node->pre = tail;
+			tail = node;
+			return;
+		}
+		else if (node->data->address < nodeTmp->data->address) {
+			node->nex = nodeTmp;
+			node->pre = nodeTmp->pre;
+			nodeTmp->pre->nex = node;
+			nodeTmp->pre = node;
+			return;
+		}
+		/* 		else {
+					node->pre = nodeTmp;
+					node->nex = nodeTmp->nex;
+					nodeTmp->nex->pre = node;
+					nodeTmp->nex = node;
+				} */
 	}
-	
-	
-	
-	
+
+
+	/* 	//链表不为空，插入到尾巴;
+		tail->nex = node;
+		node->pre = tail;
+		tail = node;
+	 */
+
+	 /* 	//根据ASCII码对地址进行排序;
+		 //冒泡排序;
+		 for (nodeTmp1 = head->nex; nodeTmp1->nex != NULL; nodeTmp1 = nodeTmp1->nex) {
+
+			 for (nodeTmp2 = nodeTmp1->nex; nodeTmp2 != NULL; nodeTmp2 = nodeTmp2->nex) {
+
+				 if (nodeTmp2->data->address < nodeTmp1->data->address) {
+					 nodeTmp3 = nodeTmp1;
+					 nodeTmp1 = nodeTmp2;
+					 nodeTmp2 = nodeTmp3;
+				 }
+			 }
+		 } */
+
+
+
+
 	return;
 }
 
@@ -408,12 +440,12 @@ int main() {
 		case 3:
 			cout << "Delete the data. Chose one way to delete the data:address or houseowner." << endl;
 			cin >> judge;
-			if (tolower(judge) == "address") {
+			if (judge == "address" || judge == "Address") {
 				cout << "Input address:";
 				cin >> address;
 				doubleList.Delete(address);
 			}
-			else if (tolower(judge) == "houseowner") {
+			else if (judge == "houseowner" || judge == "houseowner") {
 				cout << "Input houseowner:";
 				cin >> houseowner;
 				doubleList.DeleteForName(houseowner);
